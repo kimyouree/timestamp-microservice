@@ -19,13 +19,41 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/views/index.html');
 });
 
+// your first API endpoint...
+app.get('/api/:date', function (req, res) {
+    // ❤️‍🔥❤️‍🔥❤️‍🔥 NEXT: ❤️‍🔥❤️‍🔥❤️‍🔥 clean up and iterate
+    const dateString = req.params.date;
+    const dateInt = +dateString;
 
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+    if (isDateTypeUnix(dateInt)) {
+        const unixTimestamp = new Date(dateInt);
+        res.json({
+            unix: dateInt,
+            utc: unixTimestamp.toUTCString(),
+        });
+    } else {
+        const unixTimestamp = new Date(dateString);
+        res.json({
+            unix: new Date(dateString).getTime(),
+            utc: unixTimestamp.toUTCString(),
+        });
+    }
 });
 
-
+function isDateTypeUnix(date) {
+    // Check if date is a unix timestamp
+    if (!isNaN(date)) {
+        // Check if it is a valid unix timestamp
+        const unixTimestampMilliseconds = date;
+        const unixDate = new Date(unixTimestampMilliseconds * 1000);
+        if (unixDate instanceof Date && !isNaN(unixDate)) {
+            return true; // turn these to a constant
+        }
+    } else {
+        // Check if it is a valid date string
+        return false;
+    }
+}
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
