@@ -23,20 +23,22 @@ app.get('/', function (req, res) {
 // ❤️‍🔥❤️‍🔥❤️‍🔥 NEXT: ❤️‍🔥❤️‍🔥❤️‍🔥 clean up and iterate
 app.get('/api/:date', function (req, res) {
     const dateString = req.params.date;
-    // detect unix timestamp & convert to integer
+    // convert to integer to detect unix values
     const dateInt = +dateString;
+    let dateObject;
 
     if (!isNaN(dateInt)) {
-        const unixTimestamp = new Date(dateInt);
-        res.json({
-            unix: dateInt,
-            utc: unixTimestamp.toUTCString(),
-        });
+        dateObject = new Date(dateInt);
     } else {
-        const unixTimestamp = new Date(dateString);
+        dateObject = new Date(dateString);
+    }
+
+    if (isNaN(dateObject)) {
+        res.json({ error: 'Invalid date' });
+    } else {
         res.json({
-            unix: unixTimestamp.getTime(),
-            utc: unixTimestamp.toUTCString(),
+            unix: dateObject.getTime(),
+            utc: dateObject.toUTCString(),
         });
     }
 });
