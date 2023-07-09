@@ -20,12 +20,13 @@ app.get('/', function (req, res) {
 });
 
 // your first API endpoint...
+// ❤️‍🔥❤️‍🔥❤️‍🔥 NEXT: ❤️‍🔥❤️‍🔥❤️‍🔥 clean up and iterate
 app.get('/api/:date', function (req, res) {
-    // ❤️‍🔥❤️‍🔥❤️‍🔥 NEXT: ❤️‍🔥❤️‍🔥❤️‍🔥 clean up and iterate
     const dateString = req.params.date;
+    // detect unix timestamp & convert to integer
     const dateInt = +dateString;
 
-    if (isDateTypeUnix(dateInt)) {
+    if (!isNaN(dateInt)) {
         const unixTimestamp = new Date(dateInt);
         res.json({
             unix: dateInt,
@@ -34,26 +35,11 @@ app.get('/api/:date', function (req, res) {
     } else {
         const unixTimestamp = new Date(dateString);
         res.json({
-            unix: new Date(dateString).getTime(),
+            unix: unixTimestamp.getTime(),
             utc: unixTimestamp.toUTCString(),
         });
     }
 });
-
-function isDateTypeUnix(date) {
-    // Check if date is a unix timestamp
-    if (!isNaN(date)) {
-        // Check if it is a valid unix timestamp
-        const unixTimestampMilliseconds = date;
-        const unixDate = new Date(unixTimestampMilliseconds * 1000);
-        if (unixDate instanceof Date && !isNaN(unixDate)) {
-            return true; // turn these to a constant
-        }
-    } else {
-        // Check if it is a valid date string
-        return false;
-    }
-}
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
