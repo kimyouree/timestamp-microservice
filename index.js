@@ -20,18 +20,14 @@ app.get('/', function (req, res) {
 });
 
 // your first API endpoint...
-// ❤️‍🔥❤️‍🔥❤️‍🔥 NEXT: ❤️‍🔥❤️‍🔥❤️‍🔥 clean up and iterate
 app.get('/api/:date', function (req, res) {
     const dateString = req.params.date;
     // convert to integer to detect unix values
     const dateInt = +dateString;
-    let dateObject;
 
-    if (!isNaN(dateInt)) {
-        dateObject = new Date(dateInt);
-    } else {
-        dateObject = new Date(dateString);
-    }
+    const dateObject = isNaN(dateInt)
+        ? new Date(dateString)
+        : new Date(dateInt);
 
     if (isNaN(dateObject)) {
         res.json({ error: 'Invalid date' });
